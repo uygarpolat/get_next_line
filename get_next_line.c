@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:28:50 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/26 16:41:47 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/26 18:24:41 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,18 @@ char	*ft_strdup(char *str)
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*str_before_nl;
+	static char	*str_no_nl;
 	static char	*str_after_nl;
 	char		*temp;
-	
-	str_before_nl = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (str_before_nl == NULL)	
-		return (NULL);
+
+/*	if (str_no_nl == NULL)
+		str_no_nl = ""; */
+	if (str_no_nl == NULL)
+	{
+		str_no_nl = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		if (str_no_nl == NULL)	
+			return (NULL);
+	}
 	while (read(fd, buffer, BUFFER_SIZE) > 0)
 	{
 		buffer[BUFFER_SIZE] = '\0';
@@ -108,22 +113,23 @@ char	*get_next_line(int fd)
 				return (NULL);
 			str_after_nl = ft_strchr(buffer, '\n');
 			str_after_nl[ft_strlen(ft_strchr(buffer, '\n'))] = '\0';
+			str_before_nl = malloc(sizeof(char) * ();	
 			return ((char *)str_after_nl);
-			break ;
 		}
 		else
 		{
-			printf("first str_before_nl: %s\n", str_before_nl);
-			temp = ft_strdup(str_before_nl);
-			printf("first temp: %s\n", temp);
-			free(str_before_nl);
-			str_before_nl = ft_strjoin(temp, buffer);
-			printf("second str_before_nl: %s\n", str_before_nl);
+			//printf("first str_no_nl: %s\n", str_no_nl);
+			temp = ft_strdup(str_no_nl);
+			//printf("first temp: %s\n", temp);
+			//free(str_no_nl);
+			str_no_nl = ft_strjoin(temp, buffer);
+			printf("second str_before_nl: %s\n", str_no_nl);
 			printf("-----\n");
 			free(temp);
-			break ;
 		}
 	}
+	free(str_no_nl);
+	free(str_after_nl);
 	return (NULL);
 }
 
