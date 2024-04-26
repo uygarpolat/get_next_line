@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:28:50 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/26 15:26:39 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/26 16:41:47 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,18 +86,15 @@ char	*ft_strdup(char *str)
 
 #include <stdio.h>
 
-static char	*str_before_nl;
-
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
-	//static char	*str_before_nl;
+	static char	*str_before_nl;
 	static char	*str_after_nl;
-	//static int	i;
 	char		*temp;
-
+	
 	str_before_nl = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (str_before_nl == NULL)
+	if (str_before_nl == NULL)	
 		return (NULL);
 	while (read(fd, buffer, BUFFER_SIZE) > 0)
 	{
