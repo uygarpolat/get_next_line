@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:28:50 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/26 10:14:58 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/26 15:26:39 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,44 +63,71 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
+char	*ft_strdup(char *str)
+{
+	char	*word;
+	int		i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	word = malloc(sizeof(char) * (i + 1));
+	if (word == NULL)
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		word[i] = str[i];
+		i++;
+	}
+	word[i] = '\0';
+	return (word);
+}
 
 #include <stdio.h>
+
+static char	*str_before_nl;
 
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*str_before_nl;
+	//static char	*str_before_nl;
 	static char	*str_after_nl;
-	static int	i;
+	//static int	i;
 	char		*temp;
 
-	str_before_nl = NULL;
+	str_before_nl = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (str_before_nl == NULL)
+		return (NULL);
 	while (read(fd, buffer, BUFFER_SIZE) > 0)
 	{
 		buffer[BUFFER_SIZE] = '\0';
 		if (ft_strchr(buffer, '\n'))
 		{
 			str_after_nl = malloc(sizeof(char) * (ft_strlen(ft_strchr(buffer, '\n')) + 1));
-			//printf("Str length after nl is: %zu\n", ft_strlen(ft_strchr(buffer, '\n')));
-			//printf("Str after nl is: %s\n", ft_strchr(buffer, '\n'));
+			printf("Str length after nl is: %zu\n", ft_strlen(ft_strchr(buffer, '\n')));
+			printf("Str after nl is: %s\n", ft_strchr(buffer, '\n'));
 			if (str_after_nl == NULL)
 				return (NULL);
 			str_after_nl = ft_strchr(buffer, '\n');
 			str_after_nl[ft_strlen(ft_strchr(buffer, '\n'))] = '\0';
 			return ((char *)str_after_nl);
+			break ;
 		}
 		else
 		{
-			temp = malloc(sizeof(char) * (ft_strlen(str_before_nl) + 1));
-			temp = str_before_nl;
+			printf("first str_before_nl: %s\n", str_before_nl);
+			temp = ft_strdup(str_before_nl);
+			printf("first temp: %s\n", temp);
 			free(str_before_nl);
 			str_before_nl = ft_strjoin(temp, buffer);
+			printf("second str_before_nl: %s\n", str_before_nl);
+			printf("-----\n");
 			free(temp);
-			printf("%s", str_before_nl);
 			break ;
 		}
 	}
-	return (str_before_nl);
+	return (NULL);
 }
 
 #include <stdio.h>
@@ -111,7 +138,7 @@ int main(void)
 
 	fd = open("test.txt", O_RDONLY);
 	get_next_line(fd);
-	//get_next_line(fd);
+	get_next_line(fd);
 	//get_next_line(fd);
 	return (0);
 }
