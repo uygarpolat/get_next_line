@@ -1,3 +1,5 @@
-This is a test document from which we will get the new line.
-For instance, this sentence starts on a new line. Did you grab it? Here comes another new line so the output should end in three... two.. one... and END!
-And this is our third and final word, which will not end with a new line, but you should be grabbing it anyway.
+1234567890
+123456
+12
+1
+1234567

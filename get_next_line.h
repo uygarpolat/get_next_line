@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:30:20 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/25 12:52:18 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/25 18:15:21 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@
 # include <unistd.h>
 # include <fcntl.h>
 
-size_t	get_next_line(int fd);
+char	*get_next_line(int fd);
 
 #endif
