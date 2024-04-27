@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:28:50 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/26 18:24:41 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/27 13:43:08 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	*ft_strdup(char *str)
 }
 
 #include <stdio.h>
-
+/*
 char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
@@ -93,8 +93,8 @@ char	*get_next_line(int fd)
 	static char	*str_after_nl;
 	char		*temp;
 
-/*	if (str_no_nl == NULL)
-		str_no_nl = ""; */
+	if (str_no_nl == NULL)
+		str_no_nl = "";
 	if (str_no_nl == NULL)
 	{
 		str_no_nl = malloc(sizeof(char) * (BUFFER_SIZE + 1));
@@ -113,7 +113,7 @@ char	*get_next_line(int fd)
 				return (NULL);
 			str_after_nl = ft_strchr(buffer, '\n');
 			str_after_nl[ft_strlen(ft_strchr(buffer, '\n'))] = '\0';
-			str_before_nl = malloc(sizeof(char) * ();	
+			//str_before_nl = malloc(sizeof(char) * ();	
 			return ((char *)str_after_nl);
 		}
 		else
@@ -132,16 +132,43 @@ char	*get_next_line(int fd)
 	free(str_after_nl);
 	return (NULL);
 }
+*/
+
+char	*get_next_line(int fd)
+{
+	char		buffer[BUFFER_SIZE + 1];
+	static char	*str_static;
+	char		*str_auto;
+	ssize_t		bytes_read;
+
+	bytes_read = 1;
+	if (str_static == NULL)
+		str_static = "";
+	while (bytes_read)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		buffer[bytes_read] = '\0';
+		str_auto = ft_strjoin(str_static, buffer);
+		if (ft_strlen(str_static) != 0)
+			free(str_static);
+		// Code to get current line will go here.
+		str_static = ft_strdup(str_auto);
+		free(str_auto);
+	}
+	return (str_static);
+}
 
 #include <stdio.h>
 
 int main(void)
 {
-	int	fd;
+	int		fd;
+	char	*str;
 
 	fd = open("test.txt", O_RDONLY);
-	get_next_line(fd);
-	get_next_line(fd);
-	//get_next_line(fd);
+	str = get_next_line(fd);
+	printf("%s", str);
+	close(fd);
+	free(str);
 	return (0);
 }
