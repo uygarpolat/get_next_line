@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:28:50 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/28 01:07:37 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/28 13:28:14 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ char	*get_next_line(int fd)
 		//	buffer[bytes_read] = '\0';
 		//	bytes_read++;
 		//}
-		if (bytes_read == 0)
-			return (NULL);
+		//if (bytes_read == 0)
+		//	return (NULL);
 		str_auto = ft_strjoin(str_static, buffer);
 		if (str_auto == NULL)
 			return (NULL);
-		//if (ft_strlen(str_static) != 0)
-		free(str_static);
+		if (ft_strlen(str_static) != 0)
+			free(str_static);
 		if (ft_strchr(str_auto, '\n'))
 		{
 			str_static = ft_strdup(ft_strchr(str_auto, '\n'));
@@ -66,11 +66,11 @@ int main(void)
 
 	i = 0;
 	fd = open("test.txt", O_RDONLY);
-	while (i++ < 1000)
+	while (i++ < 2000)
 	{
 		str = get_next_line(fd);
 		printf("%s", str);
-		//free(str);
+		free(str);
 	}
 	close(fd);
 	return (0);
