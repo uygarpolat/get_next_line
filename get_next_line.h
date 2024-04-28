@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:30:20 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/27 18:17:48 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/28 15:54:53 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 # include <unistd.h>
 # include <fcntl.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 101
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 101
+# endif
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *str, int c);

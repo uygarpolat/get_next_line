@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 15:03:47 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/28 12:33:43 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/28 15:23:25 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	*ft_str_tillchar(char *str, int c)
 	while (str[i])
 		str_return[i++] = '\0';
 	str_return[i] = '\0';
-	free(str);
+	//free(str);
 	return (str_return);
 }
 /*
