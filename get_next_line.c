@@ -6,13 +6,13 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 08:28:50 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/28 16:05:03 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/28 20:57:16 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-#include <stdio.h>
+//#include <stdio.h>
 
 char	*get_next_line(int fd)
 {
@@ -21,6 +21,9 @@ char	*get_next_line(int fd)
 	char		*str_auto;
 	ssize_t		bytes_read;
 	char		*temp;
+
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
 
 	bytes_read = 1;
 	if (str_static == NULL)
@@ -41,8 +44,8 @@ char	*get_next_line(int fd)
 			free(str_auto);
 			return (NULL);
 		}
-		//if (str_static)
-		free(str_static);
+		if (str_static)
+			free(str_static);
 
 		if (ft_strchr(str_auto, '\n'))
 		{
@@ -58,7 +61,7 @@ char	*get_next_line(int fd)
 	return (str_static);
 }
 
-
+/*
 #include <stdio.h>
 
 int main(void)
@@ -81,4 +84,4 @@ int main(void)
 	close(fd);
 	return (0);
 }
-
+*/
