@@ -6,12 +6,11 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 15:03:47 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/28 15:23:25 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/29 19:26:36 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
 
 char	*ft_strchr(const char *str, int c)
 {
@@ -84,8 +83,6 @@ char	*ft_strdup(char *str)
 	word[i] = '\0';
 	return (word);
 }
-
-
 
 char	*ft_str_tillchar(char *str, int c)
 {

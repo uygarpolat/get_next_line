@@ -5,80 +5,105 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 08:28:50 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/28 20:57:16 by upolat           ###   ########.fr       */
+/*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
+/*   Updated: 2024/04/29 21:37:00 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-//#include <stdio.h>
+//char	*ft_read(ssize_t bytes_read, int fd, char *buffer, char *str_static, char *str_auto, char *temp)
+
+
+
+
+
 
 char	*get_next_line(int fd)
 {
+	static char	*str_static = NULL;
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*str_static;
-	char		*str_auto;
-	ssize_t		bytes_read;
 	char		*temp;
+	ssize_t		bytes_read;
+	char		*str_auto;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-
-	bytes_read = 1;
-	if (str_static == NULL)
-		str_static = ft_strdup("");
-	while (bytes_read)
+	if (str_static)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
-			return (NULL);
-		buffer[bytes_read] = '\0';
-		
-		str_auto = ft_strjoin(str_static, buffer);
-		if (str_auto == NULL)
-			return (NULL);
-		if (ft_strlen(str_auto) == 0)
+		temp = ft_strchr(str_static, '\n');
+		if (temp)
 		{
+			str_auto = ft_strdup(temp);
+			temp = ft_str_tillchar(str_static, '\n');
 			free(str_static);
-			free(str_auto);
-			return (NULL);
-		}
-		if (str_static)
-			free(str_static);
-
-		if (ft_strchr(str_auto, '\n'))
-		{
-			str_static = ft_strdup(ft_strchr(str_auto, '\n'));
-			temp = ft_str_tillchar(str_auto, '\n');
-			free(str_auto);
+			str_static = str_auto;
 			return (temp);
 		}
-		else
-			str_static = ft_strdup(str_auto);
-		free(str_auto);
 	}
-	return (str_static);
+	bytes_read = read(fd, buffer, BUFFER_SIZE); // First read before the loop
+	while (bytes_read > 0)
+	{
+		buffer[bytes_read] = '\0';
+		if (str_static)
+			temp = ft_strjoin(str_static, buffer);
+		else
+			temp = ft_strdup(buffer);
+		if (!temp)
+			return (NULL);
+		free(str_static);
+		str_static = temp;
+		temp = ft_strchr(str_static, '\n');
+		if (temp)
+		{
+			str_auto = ft_strdup(temp);
+			temp = ft_str_tillchar(str_static, '\n');
+			free(str_static);
+			str_static = str_auto;
+			return (temp);
+		}
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+	}
+	//bytes_read, fd, buffer, BUFFER_SIZE, str_static, str_auto, temp
+	if (bytes_read == -1)
+	{
+		free(str_static);
+		str_static = NULL;
+		return (NULL);
+	}
+	//If end of file is reached and there's no newline in the remaining data
+	if (str_static && *str_static != '\0')
+	{
+		temp = ft_strdup(str_static);
+		free(str_static);
+		str_static = NULL;
+		return (temp);
+	}
+	//Clean up if we reach the end without any remaining data
+	free(str_static);
+	str_static = NULL;
+	return (NULL);
 }
 
 /*
+
 #include <stdio.h>
 
 int main(void)
 {
 	int		fd;
 	char	*str;
-	int		i;
 
-	i = 0;
 	fd = open("test.txt", O_RDONLY);
-	while (i++ < 200)
+	str = "helo";
+	while (str)
 	{
 		str = get_next_line(fd);
 		if (str == NULL)
 			printf("NULL returned\n");
 		else
 			printf("%s", str);
+		//printf("----\n");
 		free(str);
 	}
 	close(fd);
