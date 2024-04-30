@@ -6,18 +6,13 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/29 21:37:00 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/30 08:40:09 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 //char	*ft_read(ssize_t bytes_read, int fd, char *buffer, char *str_static, char *str_auto, char *temp)
-
-
-
-
-
 
 char	*get_next_line(int fd)
 {
