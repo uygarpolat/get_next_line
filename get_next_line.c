@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/30 08:40:09 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/30 09:17:51 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*get_next_line(int fd)
 			return (temp);
 		}
 	}
-	bytes_read = read(fd, buffer, BUFFER_SIZE); // First read before the loop
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	while (bytes_read > 0)
 	{
 		buffer[bytes_read] = '\0';
@@ -59,14 +59,13 @@ char	*get_next_line(int fd)
 		}
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 	}
-	//bytes_read, fd, buffer, BUFFER_SIZE, str_static, str_auto, temp
 	if (bytes_read == -1)
 	{
 		free(str_static);
 		str_static = NULL;
 		return (NULL);
 	}
-	//If end of file is reached and there's no newline in the remaining data
+	//If EOF is reached and there's no newline in the remaining data
 	if (str_static && *str_static != '\0')
 	{
 		temp = ft_strdup(str_static);
@@ -80,8 +79,6 @@ char	*get_next_line(int fd)
 	return (NULL);
 }
 
-/*
-
 #include <stdio.h>
 
 int main(void)
@@ -90,7 +87,7 @@ int main(void)
 	char	*str;
 
 	fd = open("test.txt", O_RDONLY);
-	str = "helo";
+	str = "hello";
 	while (str)
 	{
 		str = get_next_line(fd);
@@ -98,10 +95,10 @@ int main(void)
 			printf("NULL returned\n");
 		else
 			printf("%s", str);
-		//printf("----\n");
+		printf("----\n");
 		free(str);
 	}
 	close(fd);
 	return (0);
 }
-*/
+
