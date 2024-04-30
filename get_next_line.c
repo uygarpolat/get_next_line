@@ -6,14 +6,26 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
-/*   Updated: 2024/04/30 09:17:51 by upolat           ###   ########.fr       */
+/*   Updated: 2024/04/30 15:30:35 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-//char	*ft_read(ssize_t bytes_read, int fd, char *buffer, char *str_static, char *str_auto, char *temp)
+char	*helper1(char *temp, char *str_static)
+{
+	char	*str_auto;
 
+	if (temp)
+	{
+		str_auto = ft_strdup(temp);
+		temp = ft_str_tillchar(str_static, '\n');
+		free(str_static);
+		str_static = str_auto;
+		return (temp);
+	}
+	return (NULL);
+}
 char	*get_next_line(int fd)
 {
 	static char	*str_static = NULL;
@@ -27,6 +39,9 @@ char	*get_next_line(int fd)
 	if (str_static)
 	{
 		temp = ft_strchr(str_static, '\n');
+//		if (helper1(temp, str_static) != NULL)
+//			return (temp);
+
 		if (temp)
 		{
 			str_auto = ft_strdup(temp);
@@ -49,6 +64,8 @@ char	*get_next_line(int fd)
 		free(str_static);
 		str_static = temp;
 		temp = ft_strchr(str_static, '\n');
+//		if (helper1(temp, str_static) != NULL)
+//			return (temp);
 		if (temp)
 		{
 			str_auto = ft_strdup(temp);
@@ -87,6 +104,7 @@ int main(void)
 	char	*str;
 
 	fd = open("test.txt", O_RDONLY);
+	//fd = open("nonl.txt", O_RDONLY);
 	str = "hello";
 	while (str)
 	{
