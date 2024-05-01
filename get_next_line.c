@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
-/*   Updated: 2024/05/01 17:12:48 by upolat           ###   ########.fr       */
+/*   Updated: 2024/05/01 19:11:47 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,16 @@ char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
 	return (NULL);
 }
 
-//If EOF is reached and there's no newline in the remaining data
-//After if, Clean up if we reach the end without any remaining data
 char	*helper3(char **str_static)
+{
+	free(*str_static);
+	*str_static = NULL;
+	return (NULL);
+}
+
+// If EOF is reached and there's no newline in the remaining data
+//After if, Clean up if we reach the end without any remaining data
+char	*helper4(char **str_static)
 {
 	char	*temp;
 
@@ -76,12 +83,6 @@ char	*helper3(char **str_static)
 	free(*str_static);
 	*str_static = NULL;
 	return (NULL);
-}
-
-void	helper4(char **str_static)
-{
-	free(*str_static);
-	*str_static = NULL;
 }
 
 char	*get_next_line(int fd)
@@ -103,11 +104,8 @@ char	*get_next_line(int fd)
 	if (line != NULL)
 		return (line);
 	if (bytes_read == -1)
-	{
-		helper4(&str_static);
-		return (NULL);
-	}
-	line = helper3(&str_static);
+		return (helper3(&str_static));
+	line = helper4(&str_static);
 	if (line != NULL)
 		return (line);
 	return (NULL);
