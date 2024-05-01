@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
-/*   Updated: 2024/05/01 14:12:42 by upolat           ###   ########.fr       */
+/*   Created: 2024/05/01 14:15:53 by upolat            #+#    #+#             */
+/*   Updated: 2024/05/01 16:36:17 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 // Create a copy up to the newline
 // Update str_static to start after the newline
@@ -59,9 +59,9 @@ char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
 	}
 	return (NULL);
 }
-	//If EOF is reached and there's no newline in the remaining data
-	//After if, Clean up if we reach the end without any remaining data
 
+//If EOF is reached and there's no newline in the remaining data
+//After if, Clean up if we reach the end without any remaining data
 char	*helper3(char **str_static)
 {
 	char	*temp;
@@ -86,54 +86,29 @@ void	helper4(char **str_static)
 
 char	*get_next_line(int fd)
 {
-	static char	*str_static;
+	static char	*str_static[OPEN_MAX];
 	char		buffer[BUFFER_SIZE + 1];
 	ssize_t		bytes_read;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	if (str_static)
+	if (str_static[fd])
 	{
-		line = helper1(&str_static);
+		line = helper1(&str_static[fd]);
 		if (line != NULL)
 			return (line);
 	}
-	line = helper2(fd, &bytes_read, &str_static, buffer);
+	line = helper2(fd, &bytes_read, &str_static[fd], buffer);
 	if (line != NULL)
 		return (line);
 	if (bytes_read == -1)
 	{
-		helper4(&str_static);
+		helper4(&str_static[fd]);
 		return (NULL);
 	}
-	line = helper3(&str_static);
+	line = helper3(&str_static[fd]);
 	if (line != NULL)
 		return (line);
 	return (NULL);
 }
-/*
-#include <stdio.h>
-
-int main(void)
-{
-	int		fd;
-	char	*str;
-
-	fd = open("test.txt", O_RDONLY);
-	//fd = open("nonl.txt", O_RDONLY);
-	str = "hello";
-	while (str)
-	{
-		str = get_next_line(fd);
-		if (str == NULL)
-			printf("NULL returned\n");
-		else
-			printf("%s", str);
-		printf("----\n");
-		free(str);
-	}
-	close(fd);
-	return (0);
-}
-*/
