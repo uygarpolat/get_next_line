@@ -6,7 +6,7 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
-/*   Updated: 2024/05/01 14:12:42 by upolat           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:46:35 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
 	}
 	return (NULL);
 }
-	//If EOF is reached and there's no newline in the remaining data
-	//After if, Clean up if we reach the end without any remaining data
 
+//If EOF is reached and there's no newline in the remaining data
+//After if, Clean up if we reach the end without any remaining data
 char	*helper3(char **str_static)
 {
 	char	*temp;
@@ -112,28 +112,3 @@ char	*get_next_line(int fd)
 		return (line);
 	return (NULL);
 }
-/*
-#include <stdio.h>
-
-int main(void)
-{
-	int		fd;
-	char	*str;
-
-	fd = open("test.txt", O_RDONLY);
-	//fd = open("nonl.txt", O_RDONLY);
-	str = "hello";
-	while (str)
-	{
-		str = get_next_line(fd);
-		if (str == NULL)
-			printf("NULL returned\n");
-		else
-			printf("%s", str);
-		printf("----\n");
-		free(str);
-	}
-	close(fd);
-	return (0);
-}
-*/
