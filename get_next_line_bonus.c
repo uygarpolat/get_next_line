@@ -6,30 +6,41 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 14:15:53 by upolat            #+#    #+#             */
-/*   Updated: 2024/05/01 23:11:41 by upolat           ###   ########.fr       */
+/*   Updated: 2024/05/02 14:51:33 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
+char	*helper3(char **str_static);
+
 // Create a copy up to the newline
 // Update str_static to start after the newline
-char	*helper1(char **str_static)
+int	helper1(char **str_static, char **line)
 {
 	char	*newline_ptr;
-	char	*result;
 	char	*temp;
 
 	newline_ptr = ft_strchr(*str_static, '\n');
-	result = NULL;
+	*line = NULL;
 	if (newline_ptr)
 	{
-		result = ft_str_tillchar(*str_static, '\n');
+		*line = ft_str_tillchar(*str_static, '\n');
+		if (!*line)
+		{
+			free(*line);
+			return (0);
+		}
 		temp = ft_strdup(newline_ptr);
+		if (!temp)
+		{
+			free(*line);
+			return (0);
+		}
 		free(*str_static);
 		*str_static = temp;
 	}
-	return (result);
+	return (1);
 }
 
 char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
@@ -46,12 +57,13 @@ char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
 		else
 			temp = ft_strdup(buffer);
 		if (!temp)
-			return (NULL);
+			return (helper3(str_static));
 		free(*str_static);
 		*str_static = temp;
 		if (*str_static)
 		{
-			line = helper1(str_static);
+			if (!helper1(str_static, &line))
+				return (helper3(str_static));
 			if (line != NULL)
 				return (line);
 		}
@@ -67,7 +79,7 @@ char	*helper3(char **str_static)
 	return (NULL);
 }
 
-//If EOF is reached and there's no newline in the remaining data
+// If EOF is reached and there's no newline in the remaining data
 //After if, Clean up if we reach the end without any remaining data
 char	*helper4(char **str_static)
 {
@@ -92,11 +104,12 @@ char	*get_next_line(int fd)
 	ssize_t		bytes_read;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE < 1)
-		return (NULL);
+	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, NULL, 0) < 0)
+		return (helper3(&str_static[fd]));
 	if (str_static[fd])
 	{
-		line = helper1(&str_static[fd]);
+		if (!helper1(&str_static[fd], &line))
+			return (helper3(&str_static[fd]));
 		if (line != NULL)
 			return (line);
 	}
@@ -108,5 +121,5 @@ char	*get_next_line(int fd)
 	line = helper4(&str_static[fd]);
 	if (line != NULL)
 		return (line);
-	return (NULL);
+	return (helper3(&str_static[fd]));
 }
