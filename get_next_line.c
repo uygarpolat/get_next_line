@@ -6,17 +6,21 @@
 /*   By: upolat <upolat@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:20:58 by upolat            #+#    #+#             */
-/*   Updated: 2024/05/02 17:42:19 by upolat           ###   ########.fr       */
+/*   Updated: 2024/05/06 09:05:15 by upolat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*helper3(char **str_static);
+char	*clean_up_static(char **str_static);
 
-// Create a copy up to the newline
-// Update str_static to start after the newline
-int	helper1(char **str_static, char **line)
+// This function processes the buffer held in str_static
+// to extract a line up to a newline character.
+// It updates str_static to start immediately after the extracted
+// newline, or leaves it unchanged if no newline is found.
+// Returns 1 if line extraction is successful, or 0 if an error
+// occurs (e.g., memory allocation failure).
+int	extract_line_and_update_static(char **str_static, char **line)
 {
 	char	*newline_ptr;
 	char	*temp;
@@ -43,7 +47,13 @@ int	helper1(char **str_static, char **line)
 	return (1);
 }
 
-char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
+// Reads data from a file descriptor into a buffer and appends it to
+// str_static. It continues to read and process data until EOF or error.
+// Each successful read is followed by an attempt to extract a complete
+// line using extract_line_and_update_static. Returns a complete line of text
+// if possible. If not, calls clean_up_static to clean up and returns NULL.
+char	*read_and_process(int fd, ssize_t *bytes_read,
+	char **str_static, char *buffer)
 {
 	char	*temp;
 	char	*line;
@@ -57,13 +67,13 @@ char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
 		else
 			temp = ft_strdup(buffer);
 		if (!temp)
-			return (helper3(str_static));
+			return (clean_up_static(str_static));
 		free(*str_static);
 		*str_static = temp;
 		if (*str_static)
 		{
-			if (!helper1(str_static, &line))
-				return (helper3(str_static));
+			if (!extract_line_and_update_static(str_static, &line))
+				return (clean_up_static(str_static));
 			if (line != NULL)
 				return (line);
 		}
@@ -72,16 +82,20 @@ char	*helper2(int fd, ssize_t *bytes_read, char **str_static, char *buffer)
 	return (NULL);
 }
 
-char	*helper3(char **str_static)
+// Frees the memory allocated to str_static and sets it to NULL to prevent
+// memory leaks. Returns NULL to signal an error or end of operation
+// without any remaining data.
+char	*clean_up_static(char **str_static)
 {
 	free(*str_static);
 	*str_static = NULL;
 	return (NULL);
 }
 
-// If EOF is reached and there's no newline in the remaining data
-//After if, Clean up if we reach the end without any remaining data
-char	*helper4(char **str_static)
+// This function checks if any unprocessed data remains in str_static at
+// EOF (no newline found). If data remains, it returns this as the final line.
+// Otherwise, it cleans up by freeing str_static and returns NULL.
+char	*process_remaining_data(char **str_static)
 {
 	char	*temp;
 
@@ -97,6 +111,11 @@ char	*helper4(char **str_static)
 	return (NULL);
 }
 
+// Retrieves the next line from a file descriptor. Manages a static buffer
+// to store incomplete reads between calls. Handles initial checks for valid
+// input, then processes any existing data in the buffer or reads more from
+// the file. Returns a single line from the file without the newline character,
+// or NULL if EOF is reached or an error occurs.
 char	*get_next_line(int fd)
 {
 	static char	*str_static;
@@ -105,21 +124,21 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, NULL, 0) < 0)
-		return (helper3(&str_static));
+		return (clean_up_static(&str_static));
 	if (str_static)
 	{
-		if (!helper1(&str_static, &line))
-			return (helper3(&str_static));
+		if (!extract_line_and_update_static(&str_static, &line))
+			return (clean_up_static(&str_static));
 		if (line != NULL)
 			return (line);
 	}
-	line = helper2(fd, &bytes_read, &str_static, buffer);
+	line = read_and_process(fd, &bytes_read, &str_static, buffer);
 	if (line != NULL)
 		return (line);
 	if (bytes_read == -1)
-		return (helper3(&str_static));
-	line = helper4(&str_static);
+		return (clean_up_static(&str_static));
+	line = process_remaining_data(&str_static);
 	if (line != NULL)
 		return (line);
-	return (helper3(&str_static));
+	return (clean_up_static(&str_static));
 }
